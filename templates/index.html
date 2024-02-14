@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Employee Management</title>
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+        </head>
+<body>
+    <h1>Employee Management</h1>
+    
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="flash-messages">
+                {% for message in messages %}
+                    <li class="{{ 'success' if 'success' in message else 'error' }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    
+    <button id="addEmployeeBtn" onclick="toggleForm()">Add Employee</button>
+
+    <form id="addEmployeeForm" action="{{ url_for('add') }}" method="post" style="display: none;">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br>
+        <label for="number">Number:</label>
+        <input type="text" id="number" name="number" required><br>
+        <button type="submit">Add Employee</button>
+        {% if errors %}
+            <ul class="errors">
+            {% for error in errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </form>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Number</th>
+            <th>Action</th>
+        </tr>
+        {% for employee in employees %}
+            <tr>
+                <td>{{ employee.id }}</td>
+                <td>{{ employee.name }}</td>
+                <td>{{ employee.email }}</td>
+                <td>{{ employee.number }}</td>
+                <td>
+                    <a href="{{ url_for('edit', employee_id=employee.id) }}">Edit</a>
+                    | <a href="{{ url_for('delete', employee_id=employee.id) }}">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <script>
+        function toggleForm() {
+            var form = document.getElementById("addEmployeeForm");
+            form.style.display = form.style.display === "none" ? "block" : "none";
+        }
+    </script>
+</body>
+</html>
